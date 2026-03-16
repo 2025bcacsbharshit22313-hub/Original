@@ -1,0 +1,63 @@
+
+
+
+
+
+import express from "express";
+import cors from "cors";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import dotenv from "dotenv";
+
+
+dotenv.config();
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+const genAI = new GoogleGenerativeAI("AIzaSyB9B_CgNmrr2S1a8KEmNbqVWkbMTYzamNs");
+
+
+app.get("/", (req, res) => {
+  res.send("Sehat-Saathi AI server running");
+});
+
+app.post("/chat", async (req, res) => {
+  try {
+
+    const { message, language } = req.body;
+
+    const model = genAI.getGenerativeModel({
+      model: "models/gemini-2.5-flash"
+    });
+
+    const result = await model.generateContent(`
+You are Sehat-Saathi, an AI healthcare assistant for rural India.
+
+Respond in ${language || "English"}.
+
+Provide simple health guidance and awareness.
+Always suggest consulting a doctor for serious symptoms.
+
+User question:
+${message}
+`);
+
+    const reply = result.response.text();
+
+    res.json({ reply });
+
+  } catch (error) {
+
+    console.error("GENAI ERROR:", error.message);
+
+    res.status(500).json({
+      reply: "AI service error. Please try again."
+    });
+
+  }
+});
+
+app.listen(3000, () => {
+  console.log("Server running on http://localhost:3000");
+});
