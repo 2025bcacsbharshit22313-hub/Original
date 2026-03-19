@@ -2,6 +2,8 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import type { Message } from '@/types';
 import { supportedLanguages } from '@/lib/chatbotLogic';
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 export function useChatbot() {
 
   const [messages, setMessages] = useState<Message[]>([
@@ -42,7 +44,7 @@ export function useChatbot() {
 
     try {
 
-      const response = await fetch("http://localhost:3000/chat", {
+      const response = await fetch(`${API_BASE}/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
