@@ -2,7 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import type { Message } from '@/types';
 import { supportedLanguages } from '@/lib/chatbotLogic';
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE =  "https://original-1-pklv.onrender.com/";
 
 export function useChatbot() {
 
