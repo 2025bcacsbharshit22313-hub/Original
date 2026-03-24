@@ -2,7 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import type { Message } from '@/types';
 import { supportedLanguages } from '@/lib/chatbotLogic';
 
-const API_BASE =  "https://original-1-pklv.onrender.com/";
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'https://original-1-pklv.onrender.com').replace(/\/+$/, '');
 
 export function useChatbot() {
 
@@ -44,7 +44,7 @@ export function useChatbot() {
 
     try {
 
-      const response = await fetch(`${API_BASE}/chat`, {
+      const response = await fetch(new URL('chat', `${API_BASE}/`).toString(), {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -57,6 +57,10 @@ export function useChatbot() {
 
       const data = await response.json();
 
+      if (!response.ok || !data?.reply) {
+        throw new Error(data?.error || 'Unable to fetch chat response');
+      }
+
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: data.reply,
@@ -66,7 +70,7 @@ export function useChatbot() {
 
       setMessages((prev) => [...prev, botMessage]);
 
-    } catch (error) {
+    } catch {
 
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
