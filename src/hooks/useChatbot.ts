@@ -3,7 +3,7 @@ import type { Message } from '@/types';
 import { supportedLanguages } from '@/lib/chatbotLogic';
 
 // Accepts VITE_API_BASE_URL with or without trailing slash (e.g. https://api.example.com/).
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'https://original-1-pklv.onrender.com').replace(/\/+$/, '');
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'https://original-1-pklv.onrender.com/').replace(/\/+$/, '');
 
 export function useChatbot() {
 
@@ -60,7 +60,7 @@ export function useChatbot() {
       const data = await response.json();
 
       if (!response.ok || !data?.reply) {
-        throw new Error(data?.error || 'Unable to fetch chat response');
+        throw new Error(data?.error || `HTTP ${response.status}: Unable to fetch chat response`);
       }
 
       const botMessage: Message = {
