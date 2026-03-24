@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import type { Message } from '@/types';
 import { supportedLanguages } from '@/lib/chatbotLogic';
 
+// Accepts VITE_API_BASE_URL with or without trailing slash (e.g. https://api.example.com/).
 const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'https://original-1-pklv.onrender.com').replace(/\/+$/, '');
 
 export function useChatbot() {
@@ -44,6 +45,7 @@ export function useChatbot() {
 
     try {
 
+      // Build endpoint safely after normalization so Netlify env config stays robust.
       const response = await fetch(new URL('chat', `${API_BASE}/`).toString(), {
         method: "POST",
         headers: {
